@@ -19,6 +19,7 @@ namespace PBChance.UI.Components
         public int AttemptCount { get; set; }
         public bool DisplayOdds { get; set; }
         public bool IgnoreRunCount { get; set; }
+        public bool IgnoreResets { get; set; }
 
         public event EventHandler SettingChanged;
 
@@ -35,6 +36,7 @@ namespace PBChance.UI.Components
             AttemptCountBox.DataBindings.Add("Value", this, "AttemptCount", true, DataSourceUpdateMode.OnPropertyChanged).BindingComplete += OnSettingChanged;
             DisplayOddsCheckbox.DataBindings.Add("Checked", this, "DisplayOdds", true, DataSourceUpdateMode.OnPropertyChanged).BindingComplete += OnSettingChanged;
             IgnoreRunCountBox.DataBindings.Add("Checked", this, "IgnoreRunCount", true, DataSourceUpdateMode.OnPropertyChanged).BindingComplete += OnSettingChanged;
+            IgnoreResetCheckBox.DataBindings.Add("Checked", this, "IgnoreResets", true, DataSourceUpdateMode.OnPropertyChanged).BindingComplete += OnSettingChanged;
         }
 
         private void OnSettingChanged(object sender, BindingCompleteEventArgs e)
@@ -53,12 +55,13 @@ namespace PBChance.UI.Components
 
         private int CreateSettingsNode(XmlDocument document, XmlElement parent)
         {
-            return SettingsHelper.CreateSetting(document, parent, "Version", "0.1") ^
+            return SettingsHelper.CreateSetting(document, parent, "Version", "0.2") ^
                 SettingsHelper.CreateSetting(document, parent, "AttemptCount", AttemptCount) ^
                 SettingsHelper.CreateSetting(document, parent, "UsePercentOfAttempts", UsePercentOfAttempts) ^
                 SettingsHelper.CreateSetting(document, parent, "UseFixedAttempts", UseFixedAttempts) ^
                 SettingsHelper.CreateSetting(document, parent, "DisplayOdds", DisplayOdds) ^
-                SettingsHelper.CreateSetting(document, parent, "IgnoreRunCount", IgnoreRunCount);
+                SettingsHelper.CreateSetting(document, parent, "IgnoreRunCount", IgnoreRunCount) ^
+                SettingsHelper.CreateSetting(document, parent, "IgnoreResets", IgnoreResets);
         }
 
         internal void SetSettings(XmlNode settings)
@@ -68,6 +71,7 @@ namespace PBChance.UI.Components
             UseFixedAttempts = SettingsHelper.ParseBool(settings["UseFixedAttempts"]);
             DisplayOdds = SettingsHelper.ParseBool(settings["DisplayOdds"]);
             IgnoreRunCount = SettingsHelper.ParseBool(settings["IgnoreRunCount"]);
+            IgnoreResets = SettingsHelper.ParseBool(settings["IgnoreResets"]);
         }
     }
 }

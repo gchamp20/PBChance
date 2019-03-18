@@ -207,15 +207,30 @@ namespace PBChance.UI.Components
                         continue;
                     }
 
-                    if(splits[segment].Count == 0)
+                    if (splits[segment].Count == 0)
                     {
                         // This split contains no split times, so we cannot calculate a probability
                         InternalComponent.InformationValue = "-";
                         return;
                     }
 
-                    int attempt = rand.Next(splits[segment].Count);
-                    Time? split = splits[segment][attempt];
+                    Time? split = null;
+                    int attempt = -1;
+                    if (Settings.IgnoreResets)
+                    {
+                        bool allResets = splits[segment].All(x => x == null);
+                        while (!allResets && split == null)
+                        {
+                            attempt = rand.Next(splits[segment].Count);
+                            split = splits[segment][attempt];
+                        }
+                    }
+                    else
+                    {
+                        attempt = rand.Next(splits[segment].Count);
+                        split = splits[segment][attempt];
+                    }
+
                     if (split == null)
                     {
                         // Split is a reset, so count it as a failure
